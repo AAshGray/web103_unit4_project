@@ -35,3 +35,15 @@ ul {
     justify-content: center;
     padding-top: 10px;
 }
+
+.car-card--detail {
+    max-width: 600px;
+    width: 100%;
+    margin: 0 auto;
+}
+
+.car-card--detail canvas {
+    display: block;
+    width: 450px;
+    height: 270px;
+}

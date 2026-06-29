@@ -1,19 +1,37 @@
 import React from 'react'
-import { useParams } from 'react-router-dom'
-import { getCustomCarById } from '../services/CarsAPI'
+import { useNavigate } from 'react-router-dom'
+import '../css/DisplayCard.css'
 
-const DisplayCar = ({ car }) => {
-    if (!car ) return <p>Car not found.</p>
+const DisplayCar = ({ car, detail = false, onDelete }) => {
+    const canvasRef = React.useRef(null)
+    const canvasW = detail ? 450 : 300
+    const canvasH = detail ? 270 : 180
+    const navigate = useNavigate()
 
-    const [totalPrice, setTotalPrice] = React.useState(car.totalprice || null);
+    React.useEffect(() => {
+        if (!car || !canvasRef.current) return
+        const canvas = canvasRef.current
+        const ctx = canvas.getContext('2d')
+        const img = new Image()
+        img.src = '/car_body.png'
+        img.onload = () => {
+            canvas.width = canvasW
+            canvas.height = canvasH
+            ctx.drawImage(img, 0, 0, canvasW, canvasH)
+            ctx.globalCompositeOperation = 'multiply'
+            ctx.fillStyle = car.color_hex
+            ctx.fillRect(0, 0, canvasW, canvasH)
+            ctx.globalCompositeOperation = 'source-over'
+        }
+    }, [car, canvasW, canvasH])
 
-    if (totalPrice === null || totalPrice === 0 ) {
-        setTotalPrice(car.model_price + car.color_price + car.roof_price + car.wheel_price + car.interior_price);
-    }
+    if (!car) return <p>Car not found.</p>
+
+    const totalPrice = car.totalprice || (car.model_price + car.color_price + car.roof_price + car.wheel_price + car.interior_price)
 
     return (
-        <div className="display-car">
-            <canvas ref={canvasRef} style={{ width: '100%' }} />
+        <div className={`car-card ${detail ? 'car-card--detail' : ''}`}>
+            <canvas ref={canvasRef} />
             <h2>{car.model_name}</h2>
             <p><strong>Color:</strong> {car.color_name}</p>
             <p><strong>Roof:</strong> {car.roof_name}</p>
@@ -23,6 +41,12 @@ const DisplayCar = ({ car }) => {
             <p><strong>Description:</strong> {car.description}</p>
             <p><strong>Submitted by:</strong> {car.submittedby}</p>
             <p><strong>Submitted on:</strong> {new Date(car.submittedon).toLocaleDateString()}</p>
+            {onDelete && (
+                <div className="car-card-footer">
+                    <button onClick={() => navigate(`/edit/${car.id}`)}>Edit</button>
+                    <button onClick={onDelete}>Delete</button>
+                </div>
+            )}
         </div>
     )
 }

@@ -1,0 +1,75 @@
+.edit-car {
+    display: flex;
+    gap: 24px;
+    padding: 24px;
+    align-items: flex-start;
+}
+
+.edit-car__preview {
+    position: sticky;
+    top: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.edit-car__save {
+    width: 100%;
+}
+
+.edit-car__panel {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    overflow-y: auto;
+}
+
+.edit-car__section h3 {
+    margin-bottom: 8px;
+}
+
+.edit-car__tiles {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.edit-car__tile {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 12px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    cursor: pointer;
+    background-color: rgb(58, 58, 58);
+}
+
+.edit-car__tile--selected {
+    border-color: #fff;
+    outline: 2px solid #fff;
+}
+
+.edit-car__tile-swatch {
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    border: 1px solid #ccc;
+    flex-shrink: 0;
+}
+
+.edit-car__tile-price {
+    color: #aaa;
+    font-size: 0.85em;
+}
+
+.edit-car__textarea {
+    width: 100%;
+    min-height: 80px;
+    margin-bottom: 8px;
+}
+
+.edit-car__input {
+    width: 100%;
+}
