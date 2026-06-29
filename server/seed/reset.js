@@ -19,4 +19,7 @@ for (const [table, query] of Object.entries(schema)) {
   console.log(`seeded ${table}`)
 }
 
+await pool.query("SELECT setval('customcars_id_seq', (SELECT MAX(id) FROM customcars))")
+console.log('reset sequence')
+
 pool.end()

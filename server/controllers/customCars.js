@@ -27,8 +27,8 @@ export const createCustomCar = async (req, res) => {
         const { modelid, colorid, roofid, wheelid, interiorid, totalprice, description, submittedby } = req.body;
         const submittedOn = new Date().toISOString();
         const result = await pool.query(
-            'INSERT INTO customcars (modelid, colorid, roofid, wheelid, interiorid, totalprice, description, submittedby, submittedOn) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING *',
-            [modelid, colorid, roofid, wheelid, interiorid, totalprice, description, submittedby, submittedOn]
+            'INSERT INTO customcars (modelid, colorid, roofid, wheelid, interiorid, totalprice, description, submittedby) VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING *',
+            [modelid, colorid, roofid, wheelid, interiorid, totalprice, description, submittedby]
         );
         res.status(201).json(result.rows[0]);
     } catch (error) {

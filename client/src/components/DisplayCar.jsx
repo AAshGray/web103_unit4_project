@@ -2,7 +2,7 @@ import React from 'react'
 import { useNavigate } from 'react-router-dom'
 import '../css/DisplayCard.css'
 
-const DisplayCar = ({ car, detail = false, onDelete }) => {
+const DisplayCar = ({ car, detail = false, onDelete, preview = false }) => {
     const canvasRef = React.useRef(null)
     const canvasW = detail ? 450 : 300
     const canvasH = detail ? 270 : 180
@@ -13,13 +13,13 @@ const DisplayCar = ({ car, detail = false, onDelete }) => {
         const canvas = canvasRef.current
         const ctx = canvas.getContext('2d')
         const img = new Image()
-        img.src = '/car_body.png'
+        img.src = car.lastImage || '/car_body.png'
         img.onload = () => {
             canvas.width = canvasW
             canvas.height = canvasH
             ctx.drawImage(img, 0, 0, canvasW, canvasH)
             ctx.globalCompositeOperation = 'multiply'
-            ctx.fillStyle = car.color_hex
+            ctx.fillStyle = car.color_hex || '#808080'
             ctx.fillRect(0, 0, canvasW, canvasH)
             ctx.globalCompositeOperation = 'source-over'
         }
@@ -38,10 +38,10 @@ const DisplayCar = ({ car, detail = false, onDelete }) => {
             <p><strong>Wheels:</strong> {car.wheel_name}</p>
             <p><strong>Interior:</strong> {car.interior_name}</p>
             <p><strong>Total Price:</strong> ${totalPrice?.toLocaleString()}</p>
-            <p><strong>Description:</strong> {car.description}</p>
-            <p><strong>Submitted by:</strong> {car.submittedby}</p>
-            <p><strong>Submitted on:</strong> {new Date(car.submittedon).toLocaleDateString()}</p>
-            {onDelete && (
+            {!preview && <p><strong>Description:</strong> {car.description}</p>}
+            {!preview && <p><strong>Submitted by:</strong> {car.submittedby}</p>}
+            {!preview && <p><strong>Submitted on:</strong> {new Date(car.submittedon).toLocaleDateString()}</p>}
+            {!preview && onDelete && (
                 <div className="car-card-footer">
                     <button onClick={() => navigate(`/edit/${car.id}`)}>Edit</button>
                     <button onClick={onDelete}>Delete</button>

@@ -3,6 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom'
 import { getCustomCarById, updateCustomCar } from '../services/CarsAPI'
 import { useCarOptions } from '../context/CarOptionsContext'
 import DisplayCar from '../components/DisplayCar'
+import { ConfigPanel } from '../components/ConfigPanel'
 import '../css/EditCar.css'
 
 const EditCar = () => {
@@ -30,13 +31,15 @@ const EditCar = () => {
                 wheel,
                 interior,
                 description: carData.description,
-                submittedby: carData.submittedby
+                submittedby: carData.submittedby,
+                lastImage: model?.image
             })
             setCar(carData)
         }
         fetch()
     }, [id, options])
 
+    // https://react.dev/reference/react/useMemo
     const resolvedCar = React.useMemo(() => {
         if (!car || !selections) return null
         const { model, color, roof, wheel, interior } = selections
@@ -60,7 +63,8 @@ const EditCar = () => {
             interior_price: interior?.price,
             totalprice: (model?.price || 0) + (color?.price || 0) + (roof?.price || 0) + (wheel?.price || 0) + (interior?.price || 0),
             description: selections.description,
-            submittedby: selections.submittedby
+            submittedby: selections.submittedby,
+            lastImage: selections.lastImage || selections.model?.image,
         }
     }, [car, selections])
 
@@ -80,74 +84,15 @@ const EditCar = () => {
 
     if (loading || !selections) return <p>Loading...</p>
 
-    const { models, colors, roofs, wheels, interiors } = options
-
     return (
         <div className="edit-car">
             <div className="edit-car__preview">
                 <DisplayCar car={resolvedCar} detail={true} />
                 <button className="edit-car__save" onClick={handleSave}>Save</button>
             </div>
-            <div className="edit-car__panel">
-                <Section title="Model">
-                    {models.map(m => (
-                        <Tile key={m.id} label={m.name} sub={`$${m.price.toLocaleString()}`} selected={selections.model?.id === m.id} onClick={() => setSelections(s => ({ ...s, model: m }))} />
-                    ))}
-                </Section>
-                <Section title="Color">
-                    {colors.filter(c => c.optiontype === 'paint').map(c => (
-                        <Tile key={c.id} label={c.name} sub={`$${c.price.toLocaleString()}`} color={c.hex} selected={selections.color?.id === c.id} onClick={() => setSelections(s => ({ ...s, color: c }))} />
-                    ))}
-                </Section>
-                <Section title="Roof">
-                    {roofs.map(r => (
-                        <Tile key={r.id} label={r.name} sub={`$${r.price.toLocaleString()}`} selected={selections.roof?.id === r.id} onClick={() => setSelections(s => ({ ...s, roof: r }))} />
-                    ))}
-                </Section>
-                <Section title="Wheels">
-                    {wheels.map(w => (
-                        <Tile key={w.id} label={w.name} sub={`$${w.price.toLocaleString()}`} selected={selections.wheel?.id === w.id} onClick={() => setSelections(s => ({ ...s, wheel: w }))} />
-                    ))}
-                </Section>
-                <Section title="Interior">
-                    {interiors.map(i => (
-                        <Tile key={i.id} label={i.name} sub={`$${i.price.toLocaleString()}`} selected={selections.interior?.id === i.id} onClick={() => setSelections(s => ({ ...s, interior: i }))} />
-                    ))}
-                </Section>
-                <Section title="Details">
-                    <textarea
-                        className="edit-car__textarea"
-                        value={selections.description}
-                        onChange={e => setSelections(s => ({ ...s, description: e.target.value }))}
-                        placeholder="Description"
-                    />
-                    <input
-                        className="edit-car__input"
-                        value={selections.submittedby}
-                        onChange={e => setSelections(s => ({ ...s, submittedby: e.target.value }))}
-                        placeholder="Submitted by"
-                    />
-                </Section>
-            </div>
+            <ConfigPanel options={options} selections={selections} setSelections={setSelections} />
         </div>
     )
 }
-
-const Section = ({ title, children }) => (
-    <div className="edit-car__section">
-        <h3>{title}</h3>
-        <div className="edit-car__tiles">
-            {children}
-        </div>
-    </div>
-)
-
-const Tile = ({ label, sub, color, selected, onClick }) => (
-    <div className={`edit-car__tile ${selected ? 'edit-car__tile--selected' : ''}`} onClick={onClick}>
-        {color && <span className="edit-car__tile-swatch" style={{ backgroundColor: color }} />}
-        <span>{label}</span>
-        <span className="edit-car__tile-price">{sub}</span>
-    </div>
-)
 
 export default EditCar

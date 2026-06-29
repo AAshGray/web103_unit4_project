@@ -48,7 +48,7 @@ export default {
       totalPrice INTEGER NOT NULL,
       description TEXT NOT NULL,
       submittedBy VARCHAR(255) NOT NULL,
-      submittedOn TIMESTAMP NOT NULL
+      submittedOn TIMESTAMP NOT NULL DEFAULT NOW()
     )`,
 
 }

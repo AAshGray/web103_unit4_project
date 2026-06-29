@@ -2,7 +2,6 @@ const customCarData = [
   {
     id: 1,
     modelId: 1,
-    colorId: 3,
     roofId: 4,
     wheelId: 4,
     interiorId: 2,
