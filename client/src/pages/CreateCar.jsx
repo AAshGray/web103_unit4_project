@@ -5,6 +5,8 @@ import { useCarOptions } from '../context/CarOptionsContext'
 import DisplayCar from '../components/DisplayCar'
 import { ConfigPanel } from '../components/ConfigPanel'
 import '../css/EditCar.css'
+import { resolveCarSelections, validateSelections } from '../utilities/resolveCarSelections.js'
+
 
 const CreateCar = () => {
     const navigate = useNavigate()
@@ -21,22 +23,15 @@ const CreateCar = () => {
 
     const resolvedCar = React.useMemo(() => {
         if (!selections.model) return null
-        const { model, color, roof, wheel, interior } = selections
-        return {
-            model_name: model?.name,
-            color_name: color?.name,
-            color_hex: color?.hex,
-            roof_name: roof?.name,
-            wheel_name: wheel?.name,
-            interior_name: interior?.name,
-            totalprice: (model?.price || 0) + (color?.price || 0) + (roof?.price || 0) + (wheel?.price || 0) + (interior?.price || 0),
-            description: selections.description,
-            submittedby: selections.submittedby,
-            lastImage: selections.lastImage || selections.model?.image,
-        }
+        return resolveCarSelections(selections)
     }, [selections])
 
     const handleSave = async () => {
+            const errors = validateSelections(selections, options)
+            if (errors.length > 0) {
+                alert(errors.join('\n'))
+                return
+            }
         await createCustomCar({
             modelid: selections.model?.id,
             colorid: selections.color?.id,
@@ -56,7 +51,11 @@ const CreateCar = () => {
         <div className="edit-car">
             <div className="edit-car__preview">
                 {resolvedCar ? <DisplayCar car={resolvedCar} detail={true} preview={true} /> : <p>Select a model to preview.</p>}
-                <button className="edit-car__save" disabled={!resolvedCar} onClick={handleSave}>Save</button>
+                <button 
+                    className="edit-car__save" 
+                    disabled={validateSelections(selections, options).length > 0} 
+                    onClick={handleSave}
+                >Save</button>
             </div>
             <ConfigPanel options={options} selections={selections} setSelections={setSelections} />
         </div>

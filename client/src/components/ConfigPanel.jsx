@@ -22,11 +22,14 @@ export const ConfigPanel = ({ options, selections, setSelections }) => {
     const { models, colors, roofs, wheels, interiors } = options
 
     const handleSelect = (category, item) => {
-        setSelections(s => ({
-            ...s,
-            [category]: item,
-            lastImage: item.image
-        }))
+        setSelections(s => {
+            const next = { ...s, [category]: item, lastImage: item.image }
+            if (category === 'model' && s.color) {
+                const stillValid = item.availablecolorids?.includes(s.color.id)
+                if (!stillValid) next.color = null
+            }
+            return next
+        })
     }
 
     return (
@@ -37,9 +40,13 @@ export const ConfigPanel = ({ options, selections, setSelections }) => {
                 ))}
             </Section>
             <Section title="Color">
-                {colors.filter(c => c.optiontype === 'paint').map(c => (
-                    <Tile key={c.id} label={c.name} sub={`$${c.price.toLocaleString()}`} color={c.hex} selected={selections.color?.id === c.id} onClick={() => setSelections(s => ({ ...s, color: c }))} />
-                ))}
+                {colors
+                    .filter(c => c.optiontype === 'paint')
+                    .filter(c => !selections.model || selections.model.availablecolorids?.includes(c.id))
+                    .map(c => (
+                        <Tile key={c.id} label={c.name} sub={`$${c.price.toLocaleString()}`} color={c.hex} selected={selections.color?.id === c.id} onClick={() => setSelections(s => ({ ...s, color: c }))} />
+                    ))
+                }
             </Section>
             <Section title="Roof">
                 {roofs.map(r => (
