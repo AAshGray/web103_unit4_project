@@ -33,7 +33,7 @@ export default {
   models: `CREATE TABLE IF NOT EXISTS models (
     id SERIAL PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
-    basePrice INTEGER NOT NULL,
+    price INTEGER NOT NULL,
     availableColorIds INTEGER[] NOT NULL,
     image VARCHAR(255) NOT NULL
   )`,

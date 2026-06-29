@@ -3,23 +3,24 @@ import * as carController from '../controllers/index.js'
 
 const router = express.Router()
 
-router.get('/customCar', carController.getCustomCars)
-router.get('/customCar/:id', carController.getCustomCarById)
-router.post('/customCar', carController.createCustomCar)
-router.put('/customCar/:id', carController.updateCustomCar)
-router.delete('/customCar/:id', carController.deleteCustomCar)
+router.get('/customCars', carController.getCustomCars)
+router.get('/customCars/:id', carController.getCustomCarById)
+router.post('/customCars', carController.createCustomCar)
+router.put('/customCars/:id', carController.updateCustomCar)
+router.delete('/customCars/:id', carController.deleteCustomCar)
 
-router.get('/model', carController.getModels)
-router.get('/model/:id', carController.getModelById)
 
-router.get('/color', carController.getColors)
-router.get('/color/:id', carController.getColorById)
+router.get('/models', carController.getModels)
+router.get('/models/:id', carController.getModelById)
+
+router.get('/colors', carController.getColors)
+router.get('/colors/:id', carController.getColorById)
 
 router.get('/interiors', carController.getInteriors)
 router.get('/interiors/:id', carController.getInteriorById)
 
-router.get('/roof', carController.getRoofs)
-router.get('/roof/:id', carController.getRoofById)
+router.get('/roofs', carController.getRoofs)
+router.get('/roofs/:id', carController.getRoofById)
 
 router.get('/wheels', carController.getWheels)
 router.get('/wheels/:id', carController.getWheelById)
